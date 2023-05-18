@@ -1,0 +1,14 @@
+{
+  "name": "zmb-monorepo",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\" --ignore-path .gitignore",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "turbo": "^1.9.6"
+  }
+}
