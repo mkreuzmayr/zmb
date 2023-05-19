@@ -7,6 +7,8 @@ const zmb = createZmb(
   (resolver) => {
     browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       resolver(request, sendResponse);
+
+      return true;
     });
   },
   {

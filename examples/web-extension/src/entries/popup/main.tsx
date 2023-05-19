@@ -7,7 +7,7 @@ import '../enableDevHmr';
 
 function createContentScriptMessageBus(tabId: number) {
   return createEmitter<ContentScriptMessageBus>((request, resolve) => {
-    browser.runtime.sendMessage(request).then(resolve);
+    browser.tabs.sendMessage(tabId, request).then(resolve);
   });
 }
 

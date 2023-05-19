@@ -54,6 +54,10 @@ const zmb = createZmb(
   (resolver) => {
     browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       resolver(request, sendResponse);
+
+      // return true to indicate that the response
+      // will be sent asynchronously
+      return true;
     });
   },
   // object that defines events that
