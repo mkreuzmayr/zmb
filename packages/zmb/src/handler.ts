@@ -5,7 +5,27 @@ import { errorify } from './utils.js';
 export function handler<TSchema extends z.ZodTypeAny, TCallback>(
   schema: TSchema,
   callback: (data: z.infer<typeof schema>) => TCallback
-) {
+): (data: z.infer<typeof schema>) => Promise<Awaited<TCallback>>;
+
+export function handler<TCallback>(
+  callback: () => TCallback
+): () => Promise<Awaited<TCallback>>;
+
+export function handler<TSchema extends z.ZodTypeAny, TCallback>(
+  schemaOrCallback: TSchema | (() => TCallback),
+  callback?: (data: z.infer<TSchema>) => TCallback
+): (data?: z.infer<TSchema>) => Promise<Awaited<TCallback>> {
+  if (typeof schemaOrCallback === 'function') {
+    const callback = schemaOrCallback;
+    return () => Promise.resolve(callback());
+  }
+
+  if (!callback) {
+    throw new Error('Callback is required');
+  }
+
+  const schema = schemaOrCallback;
+
   return (data: z.infer<typeof schema>) => {
     const result = schema.parse(data);
 

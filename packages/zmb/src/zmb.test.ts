@@ -54,7 +54,9 @@ test('calculator api via ee', async () => {
         a: z.number(),
         b: z.number(),
       }),
-      (data) => {
+      async (data) => {
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
         return data.a * data.b;
       }
     ),
@@ -72,6 +74,10 @@ test('calculator api via ee', async () => {
         return data.a / data.b;
       }
     ),
+
+    randomId: handler(() => randomId()),
+
+    justVoid: handler(() => {}),
   });
 
   type MessageBus = typeof zmb;
@@ -111,4 +117,18 @@ test('calculator api via ee', async () => {
   expect(await zmb.multiply({ a: 2, b: 2 })).toEqual(4);
   expect(await zmb.multiply({ a: 3, b: 3 })).toEqual(9);
   expect(await zmb.multiply({ a: 4, b: 4 })).toEqual(16);
+
+  expect(await zmb.justVoid()).toBeUndefined();
+
+  const randomIds = await resolve([
+    zmb.randomId(),
+    zmb.randomId(),
+    zmb.randomId(),
+  ]);
+
+  expect(randomIds).toEqual([
+    expect.stringMatching(/[a-z0-9]{10}/),
+    expect.stringMatching(/[a-z0-9]{10}/),
+    expect.stringMatching(/[a-z0-9]{10}/),
+  ]);
 });
